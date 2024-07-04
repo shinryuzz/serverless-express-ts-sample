@@ -1,24 +1,31 @@
-import serverless from "serverless-http";
+import serverlessExpress from "@codegenie/serverless-express";
+import bodyParser from "body-parser";
 import express from "express";
 
 const app = express();
+const router = express.Router();
 
-app.get("/", (req, res, next) => {
+router.use(bodyParser.json());
+router.use(bodyParser.urlencoded({ extended: true }));
+
+router.get("/", (_req, res, _next) => {
   return res.status(200).json({
     message: "Hello from root!",
   });
 });
 
-app.get("/hello", (req, res, next) => {
+router.get("/hello", (_req, res, _next) => {
   return res.status(200).json({
     message: "Hello from path!",
   });
 });
 
-app.use((req, res, next) => {
+router.use((_req, res, _next) => {
   return res.status(404).json({
     error: "Not Found",
   });
 });
 
-exports.handler = serverless(app);
+app.use("/", router);
+
+export const handler = serverlessExpress({ app });
