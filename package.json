@@ -4,11 +4,14 @@
   "description": "",
   "scripts": {
     "deploy": "serverless deploy",
-    "dev": "serverless dev",
+    "dev": "serverless offline",
     "remove": "serverless remove"
   },
   "dependencies": {
     "express": "^4.19.2",
     "serverless-http": "^3.2.0"
+  },
+  "devDependencies": {
+    "serverless-offline": "^13.6.0"
   }
 }
