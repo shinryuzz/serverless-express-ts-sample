@@ -1,9 +1,26 @@
-# "org" ensures this Service is used with the correct Serverless Framework Access Key.
+# "org" ensures this service is used with the correct serverless framework access key.
 org: shinryuzz
-# "app" enables Serverless Framework Dashboard features and sharing them with other Services.
+# "app" enables serverless framework dashboard features and sharing them with other services.
 app: sample-01
-# "service" is the name of this project. This will also be added to your AWS resource names.
+# "service" is the name of this project. this will also be added to your aws resource names.
 service: serverless-fw-express-sample
+
+package:
+  individually: true
+
+custom:
+  esbuild:
+    bundle: true
+    minify: false
+    sourcemap: true
+    exclude: ["aws-sdk"]
+    target: "node20"
+    define: { "rezuire.resolve": undefined }
+    platform: "node"
+    concurrency: 10
+    watch:
+      pattern: "src/**/*.ts" # match only typescript files in src directory
+      ignore: "temp/**/*"
 
 provider:
   name: aws
@@ -11,9 +28,17 @@ provider:
 
 functions:
   api:
-    handler: handler.handler
+    handler: src/handler.handler
     events:
-      - httpApi: "*"
+      - http:
+          method: any
+          path: "/"
+          cors: true
+      - http:
+          method: any
+          path: "/{any+}"
+          cors: true
 
 plugins:
+  - serverless-esbuild
   - serverless-offline
